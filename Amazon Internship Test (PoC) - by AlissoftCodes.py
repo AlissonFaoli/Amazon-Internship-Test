@@ -8,7 +8,7 @@ Source:
 
 """
 
-def get_calcs(d: list, s: list, n: int) -> dict:
+def getMinModEfficiency(d: list, s: list, n: int) -> dict:
 
 	"""
 	Description:
@@ -24,36 +24,43 @@ def get_calcs(d: list, s: list, n: int) -> dict:
 		in the format {item_id:[difficulty, skill, result]} of the mod-efficiency calculation.
 	"""
 
-	# For this demo we're creating a Python Dictionary <class 'dict'>
-	# in order to assign an id-like system to store the arrays (Python List) <class 'list'>
-	mme = {} # mme as in Minimum Mod-Efficiency
-	for i in range(n):
-		# Populating the mme dict with empty lists to be able
-		# to work with its contents even when the length is 0
-		mme[i] = []
-		for j in range(n):
-			# applying the formula
-			m = (d[i] + s[j]) % n
+	# The constraints are that 1 <= n <=n 2*10**5
+	if 1 <= n <= 2*10**5:
+		# For this demo we're creating a Python Dictionary <class 'dict'>
+		# in order to assign an id-like system to store the arrays (Python List) <class 'list'>
+		mme = {} # mme as in Minimum Mod-Efficiency
+		for i in range(n):
+			# Populating the mme dict with empty lists to be able
+			# to work with its contents even when the length is 0
+			mme[i] = []
+			for j in range(n):
+				# applying the formula
+				m = (d[i] + s[j]) % n
 
-			# Verifying how many developers have already been assigned to a project,
-			# because one developer cannot be in two or more projects at the same time
-			assigned = len([mme[x][1] for x in mme if len(mme[x]) > 0 and mme[x][1] == s[j]])
-			
-			# Verifying how many developers with the
-			# currently processed skill status exist
-			devs = s.count(s[j])
+				# Verifying how many developers have already been assigned to a project,
+				# because one developer cannot be in two or more projects at the same time
+				assigned = len([mme[x][1] for x in mme if len(mme[x]) > 0 and mme[x][1] == s[j]])
+				
+				# Verifying how many developers with the
+				# currently processed skill status exist
+				devs = s.count(s[j])
 
-			# Making sure of the availability of
-			# developers to assign to the project
-			if len(mme[i]) == 0:
-				if devs >= assigned+1:
+				# Making sure of the availability of
+				# developers to assign to the project
+				if len(mme[i]) == 0:
+					if devs >= assigned+1:
+						mme[i] = [d[i], s[j], m]
+
+				elif devs > assigned and m < mme[i][2]:
 					mme[i] = [d[i], s[j], m]
 
-			elif devs > assigned and m < mme[i][2]:
-				mme[i] = [d[i], s[j], m]
-
-	# Returning format = {item_id: [difficulty, skill, mod_result], ...}
-	return mme
+		# Returning format = {item_id: [difficulty, skill, mod_result], ...} for demonstration purposes
+		return mme
+		# In order to output the solutions as required in the challenge, comment line 58 and uncomment line 60:
+		# return [mme[i][2] for i in mme]
+	else:
+		# Throwing an error message when n does not satisfy the requirements
+		raise ValueError('n should be between 1 and 200000.')
 
 
 def run_tests():
@@ -64,15 +71,15 @@ def run_tests():
 	"""
 	# 1
 	d1, s1, n1 = [0,1,2], [2,1,0], 3
-	ex1 = get_calcs(d1, s1, n1)
+	ex1 = getMinModEfficiency(d1, s1, n1)
 
 	# 2
 	d2, s2, n2 = [0,1,1], [0,1,0], 3
-	ex2 = get_calcs(d2, s2, n2)
+	ex2 = getMinModEfficiency(d2, s2, n2)
 
 	# 3
 	d3, s3, n3 = [0,1,2,1], [1,3,2,3], 4
-	ex3 = get_calcs(d3, s3, n3)
+	ex3 = getMinModEfficiency(d3, s3, n3)
 
 
 	# the expected answers -> [(difficulty, skill, mod_result), ...]
